@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Home - Users</title>
+  </head>
+  <body>
+    <h1 class="title">UserGo - a User REST API</h1>
+    <div id="homepage">
+      <h1>Hire a person in your area</h1>
+      <div id="users"></div>
+    </div>
+
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <!-- <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script> -->
+
+    <script
+      src="https://unpkg.com/react@16/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+
+    <!-- Create React Component -->
+    <script type="text/babel">
+      
+
+      "use strict";
+
+      const e = React.createElement;
+
+      class User extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { users: [] };
+        }
+
+        handleSubmit = (e) => {
+          e.preventDefault();
+          var lng = this.refs.lng.value;
+          var lat = this.refs.lat.value;
+
+          fetch(`/api/users?lng=${lng}&lat=${lat}`)
+            .then(function (data) {
+              return data.json();
+            })
+            .then((json) => {
+              this.setState({
+                users: json,
+              });
+              console.log(json);
+            });
+        };
+
+        render() {
+          return (
+            <div id='ninja-container'>
+              <form id='search' onSubmit={this.handleSubmit}>
+                <label>Enter your Latitude:</label>
+                <input
+                  type='text'
+                  ref='lat'
+                  placeholder='latitude'
+                  // value='33.552324'
+                  required
+                />
+                <label>Enter your Longitude:</label>
+                <input
+                  type='text'
+                  ref='lng'
+                  placeholder='longitude'
+                  // value='-7.475994'
+                  required
+                />
+                <input type='submit' value='Find Ninjas' />
+              </form>
+
+              <ul>
+                {this.state.users.map(function (user, index) {
+                  return (
+                    <li key={index}>
+                      <span className={"true"}></span>
+                      <span className='name'>{user.name}</span>
+                      <span className='rank'>{user.email}</span>
+                      <span className='rank'>{user.phone}</span>
+                      <span className='dist'>
+                        {Math.floor(user.dist.calculated)} m
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          );
+        }
+      }
+
+      ReactDOM.render(e(User), document.getElementById("users"));
+    </script>
+  </body>
+</html>
